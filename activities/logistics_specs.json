@@ -1,0 +1,50 @@
+[
+  {
+    "name": "get_tracking_status",
+    "description": "Look up the current delivery status of a package using its tracking code. Use this function when customers ask about package location, delivery status, shipping progress, tracking information, or where their package is. This function queries the Innovate Logistics tracking database and returns whether the package is in transit, has been delivered, or if the tracking code is unknown. Requires a valid 9-digit tracking code as input. Returns status as 'In Transit', 'Delivered', or 'Unknown'.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "tracking_code": {
+          "type": "string",
+          "description": "9-digit package tracking code (numeric characters only, no letters or symbols). Must be exactly 9 digits. Example: '123456789' or '987654321'. This code is provided to customers when they ship a package and uniquely identifies their shipment in our system."
+        }
+      },
+      "required": ["tracking_code"]
+    }
+  },
+  {
+    "name": "check_inventory",
+    "description": "Check if a product SKU is currently in stock at Innovate Logistics warehouse and return the available quantity. Use this function when customers ask about product availability, stock levels, inventory status, whether items are available for purchase or shipping, or how many units are available. This function queries the warehouse inventory system and returns the quantity in stock along with availability status. Requires a valid SKU code in the format of 3 uppercase letters followed by 4 digits.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "sku": {
+          "type": "string",
+          "description": "Product SKU code in format: 3 uppercase letters + 4 digits. Must be exactly 7 characters. First 3 characters must be uppercase letters A-Z, last 4 characters must be numeric digits 0-9. Examples: 'ABC1234', 'DEF5678', 'GHI9012'. SKU identifies a specific product in the warehouse inventory system."
+        }
+      },
+      "required": ["sku"]
+    }
+  },
+  {
+    "name": "calculate_delivery_days",
+    "description": "Calculate estimated delivery time in days based on destination zone and service level. Use this function when customers ask about delivery time, shipping duration, how long shipping takes, estimated arrival time, or when their package will arrive. This function applies Innovate Logistics delivery time formulas based on shipping distance (zone) and selected service speed (Standard or Express). Zone 1 is local delivery within city, Zone 2 is regional within state, Zone 3 is national across country, Zone 4 is international. Express service provides expedited delivery at approximately half the standard time. Returns the number of business days for delivery.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "zone": {
+          "type": "integer",
+          "description": "Shipping destination zone indicating distance from warehouse. Must be an integer from 1 to 4. Zone 1 = Local delivery (within city, 2 days standard), Zone 2 = Regional delivery (within state, 4 days standard), Zone 3 = National delivery (across country, 7 days standard), Zone 4 = International delivery (14 days standard). Zone determines base delivery time before service level adjustment.",
+          "enum": [1, 2, 3, 4]
+        },
+        "service_level": {
+          "type": "string",
+          "description": "Shipping service speed level. Must be exactly 'Standard' or 'Express' (case-sensitive). Standard = normal delivery speed using base days for zone. Express = expedited delivery at approximately half the standard time (rounded up to nearest day). Example: Zone 2 Standard = 4 days, Zone 2 Express = 2 days.",
+          "enum": ["Standard", "Express"]
+        }
+      },
+      "required": ["zone", "service_level"]
+    }
+  }
+]
