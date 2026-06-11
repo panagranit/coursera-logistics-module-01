@@ -24,13 +24,8 @@ Tips:
 """
 
 import pytest
-
-# Import functions under test from local activities module
-from logistics_tools import (
-    get_tracking_status,
-    check_inventory,
-    calculate_delivery_days,
-)
+# TODO: Import your logistics_tools functions here
+# from logistics_tools import get_tracking_status, check_inventory, calculate_delivery_days
 
 
 # ==============================================================================
@@ -42,13 +37,12 @@ from logistics_tools import (
 # HOW: Call with valid 9-digit code, assert success=True and valid status
 def test_tracking_success():
     """Test get_tracking_status returns correct status for valid code."""
-    result = get_tracking_status("123456789")
-    assert isinstance(result, dict)
-    assert result.get("success") is True
-    assert result.get("error") is None
-    assert result.get("result") in {"In Transit", "Delivered", "Unknown"}
-    for key in ("success", "result", "error"):
-        assert key in result
+    # TODO: Call get_tracking_status with "123456789"
+    # TODO: Assert result["success"] is True
+    # TODO: Assert result["error"] is None
+    # TODO: Assert result["result"] is one of: "In Transit", "Delivered", "Unknown"
+    # TODO: Verify response has all required keys: "success", "result", "error"
+    pass
 
 
 # WHAT: Test validation error for invalid tracking code length
@@ -56,12 +50,12 @@ def test_tracking_success():
 # HOW: Call with wrong length, assert success=False and error_type="validation"
 def test_tracking_invalid_length():
     """Test get_tracking_status rejects invalid code length."""
-    result = get_tracking_status("123")
-    assert isinstance(result, dict)
-    assert result.get("success") is False
-    assert result.get("result") is None
-    assert result.get("error_type") == "validation"
-    assert "9" in result.get("error") or "9 digits" in result.get("error") or "exactly 9" in result.get("error")
+    # TODO: Call get_tracking_status with "123" (too short)
+    # TODO: Assert result["success"] is False
+    # TODO: Assert result["error_type"] == "validation"
+    # TODO: Assert error message mentions length or "9 digits"
+    # TODO: Assert result["result"] is None
+    pass
 
 
 # WHAT: Test validation error for non-digit characters
@@ -69,10 +63,11 @@ def test_tracking_invalid_length():
 # HOW: Call with code containing letters, assert validation error
 def test_tracking_invalid_characters():
     """Test get_tracking_status rejects non-digit codes."""
-    result = get_tracking_status("12345678X")
-    assert result.get("success") is False
-    assert result.get("error_type") == "validation"
-    assert "digit" in result.get("error") or "numeric" in result.get("error") or "digits" in result.get("error")
+    # TODO: Test with "12345678X" (contains letter)
+    # TODO: Assert result["success"] is False
+    # TODO: Assert result["error_type"] == "validation"
+    # TODO: Assert error message mentions "digits" or "numeric"
+    pass
 
 
 # WHAT: Test validation error for wrong input type
@@ -80,10 +75,11 @@ def test_tracking_invalid_characters():
 # HOW: Call with integer or None, assert validation error
 def test_tracking_wrong_type():
     """Test get_tracking_status rejects non-string input."""
-    result = get_tracking_status(123456789)
-    assert result.get("success") is False
-    assert result.get("error_type") == "validation"
-    assert "string" in result.get("error")
+    # TODO: Test with 123456789 (integer, not string)
+    # TODO: Assert result["success"] is False
+    # TODO: Assert result["error_type"] == "validation"
+    # TODO: Assert error message mentions "string"
+    pass
 
 
 # WHAT: Test response structure consistency
@@ -91,15 +87,12 @@ def test_tracking_wrong_type():
 # HOW: Verify all required keys are present and have correct types
 def test_tracking_response_structure():
     """Test that tracking responses have correct structure."""
-    ok = get_tracking_status("123456789")
-    assert isinstance(ok.get("success"), bool)
-    assert "result" in ok
-    assert "error" in ok
-
-    err = get_tracking_status("123")
-    assert err.get("success") is False
-    assert err.get("result") is None
-    assert "error_type" in err
+    # TODO: Call with valid code
+    # TODO: Assert "success" key exists and is boolean
+    # TODO: Assert "result" key exists
+    # TODO: Assert "error" key exists
+    # TODO: For error case, assert "error_type" key exists
+    pass
 
 
 # ==============================================================================
@@ -111,13 +104,14 @@ def test_tracking_response_structure():
 # HOW: Call with valid SKU format, assert success and correct quantity
 def test_inventory_success():
     """Test check_inventory returns correct quantity for valid SKU."""
-    result = check_inventory("ABC1234")
-    assert result.get("success") is True
-    assert result.get("error") is None
-    assert isinstance(result.get("result"), dict)
-    assert result["result"]["sku"] == "ABC1234"
-    assert isinstance(result["result"]["quantity"], int)
-    assert isinstance(result["result"]["in_stock"], bool)
+    # TODO: Call check_inventory with "ABC1234"
+    # TODO: Assert result["success"] is True
+    # TODO: Assert result["error"] is None
+    # TODO: Assert result["result"] is a dictionary
+    # TODO: Assert result["result"]["sku"] == "ABC1234"
+    # TODO: Assert result["result"]["quantity"] is an integer
+    # TODO: Assert result["result"]["in_stock"] is a boolean
+    pass
 
 
 # WHAT: Test validation error for invalid SKU format
@@ -125,17 +119,17 @@ def test_inventory_success():
 # HOW: Test various invalid formats (wrong length, lowercase, etc.)
 def test_inventory_invalid_format():
     """Test check_inventory rejects invalid SKU formats."""
-    r1 = check_inventory("ABC123")
-    assert r1.get("success") is False
-    assert r1.get("error_type") == "validation"
+    # TODO: Test with "ABC123" (too short)
+    # TODO: Assert result["success"] is False
+    # TODO: Assert result["error_type"] == "validation"
 
-    r2 = check_inventory("abc1234")
-    assert r2.get("success") is False
-    assert r2.get("error_type") == "validation"
+    # TODO: Test with "abc1234" (lowercase letters)
+    # TODO: Assert result["success"] is False
+    # TODO: Assert result["error_type"] == "validation"
 
-    r3 = check_inventory("1234567")
-    assert r3.get("success") is False
-    assert r3.get("error_type") == "validation"
+    # TODO: Test with "1234567" (no letters)
+    # TODO: Assert result["success"] is False
+    pass
 
 
 # WHAT: Test that unknown SKUs return quantity 0
@@ -143,11 +137,11 @@ def test_inventory_invalid_format():
 # HOW: Call with valid format but unknown SKU, assert quantity=0
 def test_inventory_unknown_sku():
     """Test check_inventory handles unknown SKUs correctly."""
-    result = check_inventory("XYZ9999")
-    assert result.get("success") is True
-    assert isinstance(result.get("result"), dict)
-    assert result["result"]["quantity"] == 0
-    assert result["result"]["in_stock"] is False
+    # TODO: Call check_inventory with "XYZ9999" (valid format, unknown SKU)
+    # TODO: Assert result["success"] is True (valid format, no error)
+    # TODO: Assert result["result"]["quantity"] == 0
+    # TODO: Assert result["result"]["in_stock"] is False
+    pass
 
 
 # WHAT: Test validation error for wrong input type
@@ -155,9 +149,10 @@ def test_inventory_unknown_sku():
 # HOW: Call with integer or None, assert validation error
 def test_inventory_wrong_type():
     """Test check_inventory rejects non-string input."""
-    result = check_inventory(1234567)
-    assert result.get("success") is False
-    assert result.get("error_type") == "validation"
+    # TODO: Test with 1234567 (integer)
+    # TODO: Assert result["success"] is False
+    # TODO: Assert result["error_type"] == "validation"
+    pass
 
 
 # ==============================================================================
@@ -169,13 +164,14 @@ def test_inventory_wrong_type():
 # HOW: Call with valid inputs, assert success and correct days
 def test_delivery_calculation():
     """Test calculate_delivery_days returns correct days."""
-    result = calculate_delivery_days(2, "Standard")
-    assert result.get("success") is True
-    assert result.get("error") is None
-    assert isinstance(result.get("result"), dict)
-    assert result["result"]["zone"] == 2
-    assert result["result"]["service_level"] == "Standard"
-    assert result["result"]["delivery_days"] == 4
+    # TODO: Call calculate_delivery_days(2, "Standard")
+    # TODO: Assert result["success"] is True
+    # TODO: Assert result["error"] is None
+    # TODO: Assert result["result"] is a dictionary
+    # TODO: Assert result["result"]["zone"] == 2
+    # TODO: Assert result["result"]["service_level"] == "Standard"
+    # TODO: Assert result["result"]["delivery_days"] == 4 (zone 2 standard)
+    pass
 
 
 # WHAT: Test express service calculation
@@ -183,13 +179,14 @@ def test_delivery_calculation():
 # HOW: Test zones with express, verify days are halved correctly
 def test_delivery_express():
     """Test calculate_delivery_days correctly calculates express service."""
-    r1 = calculate_delivery_days(3, "Express")
-    assert r1.get("success") is True
-    assert r1["result"]["delivery_days"] == 4
+    # TODO: Test zone 3 express
+    # TODO: Standard is 7 days, express should be 4 days (7/2 = 3.5, rounds up to 4)
+    # TODO: Assert result["result"]["delivery_days"] == 4
 
-    r2 = calculate_delivery_days(1, "Express")
-    assert r2.get("success") is True
-    assert r2["result"]["delivery_days"] == 1
+    # TODO: Test zone 1 express
+    # TODO: Standard is 2 days, express should be 1 day (2/2 = 1)
+    # TODO: Assert result["result"]["delivery_days"] == 1
+    pass
 
 
 # WHAT: Test validation error for invalid zone
@@ -197,15 +194,14 @@ def test_delivery_express():
 # HOW: Test with zone 0, 5, -1, assert validation error
 def test_delivery_invalid_zone():
     """Test calculate_delivery_days rejects invalid zones."""
-    r1 = calculate_delivery_days(5, "Standard")
-    assert r1.get("success") is False
-    assert r1.get("error_type") == "validation"
-    assert "zone" in r1.get("error").lower()
+    # TODO: Test with zone=5 (too high)
+    # TODO: Assert result["success"] is False
+    # TODO: Assert result["error_type"] == "validation"
+    # TODO: Assert error mentions "zone" and valid range (1-4)
 
-    r2 = calculate_delivery_days(0, "Standard")
-    assert r2.get("success") is False
-    assert r2.get("error_type") == "validation"
-    assert "zone" in r2.get("error").lower()
+    # TODO: Test with zone=0 (too low)
+    # TODO: Assert result["success"] is False
+    pass
 
 
 # WHAT: Test validation error for invalid service level
@@ -213,17 +209,16 @@ def test_delivery_invalid_zone():
 # HOW: Test with invalid strings, assert validation error
 def test_delivery_invalid_service():
     """Test calculate_delivery_days rejects invalid service levels."""
-    r1 = calculate_delivery_days(2, "Premium")
-    assert r1.get("success") is False
-    assert r1.get("error_type") == "validation"
+    # TODO: Test with "Premium" (invalid)
+    # TODO: Assert result["success"] is False
+    # TODO: Assert result["error_type"] == "validation"
 
-    r2 = calculate_delivery_days(2, "express")
-    assert r2.get("success") is False
-    assert r2.get("error_type") == "validation"
+    # TODO: Test with "express" (wrong case)
+    # TODO: Assert result["success"] is False
 
-    r3 = calculate_delivery_days(2, "STANDARD")
-    assert r3.get("success") is False
-    assert r3.get("error_type") == "validation"
+    # TODO: Test with "STANDARD" (wrong case)
+    # TODO: Assert result["success"] is False
+    pass
 
 
 # WHAT: Test validation error for wrong input types
@@ -231,13 +226,13 @@ def test_delivery_invalid_service():
 # HOW: Test with string zone or integer service_level, assert errors
 def test_delivery_wrong_types():
     """Test calculate_delivery_days rejects wrong parameter types."""
-    r1 = calculate_delivery_days("2", "Standard")
-    assert r1.get("success") is False
-    assert r1.get("error_type") == "validation"
+    # TODO: Test with zone="2" (string instead of int)
+    # TODO: Assert result["success"] is False
+    # TODO: Assert result["error_type"] == "validation"
 
-    r2 = calculate_delivery_days(2, 1)
-    assert r2.get("success") is False
-    assert r2.get("error_type") == "validation"
+    # TODO: Test with service_level=1 (int instead of string)
+    # TODO: Assert result["success"] is False
+    pass
 
 
 # WHAT: Test all zone/service combinations
@@ -255,9 +250,10 @@ def test_delivery_wrong_types():
 ])
 def test_delivery_all_combinations(zone, service, expected_days):
     """Test all valid zone/service combinations."""
-    result = calculate_delivery_days(zone, service)
-    assert result.get("success") is True
-    assert result["result"]["delivery_days"] == expected_days
+    # TODO: Call calculate_delivery_days with zone and service
+    # TODO: Assert result["success"] is True
+    # TODO: Assert result["result"]["delivery_days"] == expected_days
+    pass
 
 
 # ==============================================================================
@@ -269,21 +265,12 @@ def test_delivery_all_combinations(zone, service, expected_days):
 # HOW: Test each function and verify response structure
 def test_consistent_response_format():
     """Test that all functions return consistent response format."""
-    funcs = [
-        (get_tracking_status, ("123456789",)),
-        (check_inventory, ("ABC1234",)),
-        (calculate_delivery_days, (2, "Standard")),
-    ]
-
-    for func, args in funcs:
-        res = func(*args)
-        assert isinstance(res, dict)
-        assert "success" in res and "result" in res and "error" in res
-        assert isinstance(res["success"], bool)
-        if res["success"]:
-            assert res["error"] is None
-        else:
-            assert "error_type" in res
+    # TODO: Call all three functions with valid inputs
+    # TODO: For each result, assert it has keys: "success", "result", "error"
+    # TODO: Assert "success" is boolean
+    # TODO: On success, assert "error" is None
+    # TODO: On error, assert "error_type" is present
+    pass
 
 
 if __name__ == "__main__":
