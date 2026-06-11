@@ -1,0 +1,147 @@
+# Innovate Logistics - Agent Test Queries
+
+# Instructions:
+# Use these queries to test your agent integration in Activity 1.10
+# Some queries are clear (agent should select correct function easily)
+# Some queries are ambiguous (might confuse agent if descriptions aren't good)
+# Use these to iterate on your function descriptions until selection is reliable
+
+# ==============================================================================
+# TRACKING STATUS QUERIES (Should trigger get_tracking_status)
+# ==============================================================================
+
+# Clear queries - agent should easily select get_tracking_status
+What is the status of tracking code 123456789?
+Can you check the status for tracking number 987654321?
+Where is package 555555555?
+Is tracking code 111111111 delivered yet?
+
+# Alternative phrasings - test description quality
+Tell me about package 222222222
+Has my shipment 123456789 arrived?
+Track 555555555 for me
+
+# ==============================================================================
+# INVENTORY QUERIES (Should trigger check_inventory)
+# ==============================================================================
+
+# Clear queries - agent should easily select check_inventory
+How many units of SKU ABC1234 are in stock?
+Check inventory for DEF5678
+Is GHI9012 available?
+Do we have JKL3456 in stock?
+
+# Alternative phrasings
+What's the stock level for ABC1234?
+Can I order DEF5678?
+ABC1234 availability?
+
+# ==============================================================================
+# DELIVERY TIME QUERIES (Should trigger calculate_delivery_days)
+# ==============================================================================
+
+# Clear queries - agent should easily select calculate_delivery_days
+How long will delivery take to zone 2 with standard service?
+What's the delivery time for zone 4 express?
+How many days for zone 1 standard shipping?
+Calculate delivery days for zone 3 express service
+
+# Alternative phrasings
+When will it arrive in zone 2?
+How fast is express to zone 4?
+Delivery estimate for zone 3 standard?
+
+# ==============================================================================
+# AMBIGUOUS QUERIES (Might confuse agent - good for testing descriptions)
+# ==============================================================================
+
+# These could match multiple functions - test your description quality
+What's the status of ABC1234?
+# ^ Could be tracking status OR inventory status - which will agent choose?
+
+Tell me about zone 2
+# ^ Missing context - what about zone 2? Delivery time? Cost?
+
+Do we have any packages in transit?
+# ^ Would need to check ALL tracking codes - function doesn't support this
+
+What's happening with my order?
+# ^ Very vague - need more information
+
+How long until it gets here?
+# ^ Missing required parameters (zone, service level)
+
+# ==============================================================================
+# INVALID INPUT QUERIES (Should trigger validation errors)
+# ==============================================================================
+
+# These should cause validation errors - test error handling
+What's the status of tracking code 123?
+# ^ Too short, should get validation error
+
+Check inventory for abc1234
+# ^ Lowercase letters, should get validation error
+
+How long for zone 5 standard?
+# ^ Invalid zone (must be 1-4), should get validation error
+
+What's the status of 12345678X?
+# ^ Contains letter, should get validation error
+
+Delivery time for zone 2 premium service?
+# ^ Invalid service level (must be Standard or Express), should get validation error
+
+# ==============================================================================
+# MULTI-FUNCTION QUERIES (Requires multiple calls)
+# ==============================================================================
+
+# These might require calling multiple functions
+What's the status of 123456789 and how many ABC1234 are in stock?
+# ^ Two separate questions - agent might call both functions
+
+Check inventory for DEF5678 and tell me delivery time for zone 3 express
+# ^ Two functions needed
+
+I want to ship ABC1234 to zone 4 express, is it in stock and when will it arrive?
+# ^ Needs check_inventory AND calculate_delivery_days
+
+# ==============================================================================
+# EDGE CASES
+# ==============================================================================
+
+# Test boundary conditions
+What's the status of 999999999?
+# ^ Valid format but unknown tracking code
+
+Check inventory for XYZ9999
+# ^ Valid format but unknown SKU
+
+How long for zone 1 express?
+# ^ Minimum delivery time scenario
+
+Delivery time for zone 4 standard?
+# ^ Maximum delivery time scenario
+
+# ==============================================================================
+# TESTING STRATEGY
+# ==============================================================================
+
+# Start with clear queries to verify basic function selection works
+# Move to alternative phrasings to test description robustness
+# Try ambiguous queries to identify weak descriptions
+# Test invalid inputs to verify error handling
+# Try edge cases to ensure all scenarios work
+
+# Tips for refining descriptions:
+# 1. If agent selects wrong function → Improve description keywords
+# 2. If agent can't extract parameters → Add parameter examples to description
+# 3. If multiple functions could match → Make descriptions more specific
+# 4. Test with various phrasings users might actually say
+# 5. Iterate until reliable function selection is achieved
+
+# Expected Results:
+# ✓ Clear queries: Agent selects correct function 100% of the time
+# ✓ Alternative phrasings: Agent still selects correctly (good descriptions)
+# ✓ Ambiguous queries: Agent either selects best match or asks for clarification
+# ✓ Invalid inputs: Functions return validation errors with clear messages
+# ✓ Multi-function: Agent can handle if needed (advanced)
